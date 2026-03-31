@@ -264,6 +264,13 @@ function App() {
           </div>
         </section>
       </main>
+      
+      <footer style={{ marginTop: '16px', padding: '16px', textAlign: 'center', fontSize: '0.9rem', color: 'var(--text-muted)', background: 'var(--bg-panel)', borderTop: '1px solid var(--border-glass)' }}>
+        <p style={{ margin: 0 }}>
+          Open source project by <a href="https://wegov.nyc" target="_blank" rel="noreferrer" style={{ color: 'var(--accent-main)', textDecoration: 'none', fontWeight: 500 }}>WeGovNYC</a>. 
+          View the <a href="https://github.com/wegovnyc/bathroom-demo" target="_blank" rel="noreferrer" style={{ color: 'var(--accent-main)', textDecoration: 'none', fontWeight: 500 }}>GitHub Repository</a>.
+        </p>
+      </footer>
     </div>
   );
 }
