@@ -253,7 +253,7 @@ tbody tr:hover {
     min-height: auto;
   }
   .map-section, .table-section {
-    min-height: 60vh;
+    height: 65vh;
     flex: none;
   }
   

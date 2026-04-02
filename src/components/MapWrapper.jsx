@@ -37,6 +37,18 @@ const userIcon = L.divIcon({
   iconAnchor: [16, 16]
 });
 
+function MapResizeHandler({ mobileTab }) {
+  const map = useMap();
+  useEffect(() => {
+    if (mobileTab === 'map') {
+      setTimeout(() => {
+        map.invalidateSize();
+      }, 50); // slight delay to allow CSS transitions or DOM updates
+    }
+  }, [mobileTab, map]);
+  return null;
+}
+
 function MapController({ userLocation }) {
   const map = useMap();
   useEffect(() => {
@@ -47,7 +59,7 @@ function MapController({ userLocation }) {
   return null;
 }
 
-export default function MapWrapper({ data, userLocation, tileUrl = "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png" }) {
+export default function MapWrapper({ data, userLocation, mobileTab, tileUrl = "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png" }) {
   const defaultCenter = [40.7128, -74.0060];
   
   return (
@@ -58,6 +70,7 @@ export default function MapWrapper({ data, userLocation, tileUrl = "https://{s}.
         style={{ height: '100%', width: '100%', borderRadius: '12px' }}
       >
         <MapController userLocation={userLocation} />
+        <MapResizeHandler mobileTab={mobileTab} />
 
         <TileLayer
           url={tileUrl}

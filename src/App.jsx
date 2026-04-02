@@ -37,10 +37,15 @@ function App() {
   // Mobile Tab State
   const [mobileTab, setMobileTab] = useState('map');
   
-  // PWA Install State
+  // PWA Install & Environment State
   const [deferredPrompt, setDeferredPrompt] = useState(null);
+  const [isStandalone, setIsStandalone] = useState(true); // default true to avoid brief flash, will evaluate in effect
 
   useEffect(() => {
+    // Check if app is already running as PWA
+    const checkStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+    setIsStandalone(checkStandalone);
+
     const handleBeforeInstallPrompt = (e) => {
       e.preventDefault();
       setDeferredPrompt(e);
@@ -48,6 +53,17 @@ function App() {
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
     return () => window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
   }, []);
+
+  const handleInstallClick = async () => {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      if (outcome === 'accepted') setDeferredPrompt(null);
+    } else {
+      // Fallback for iOS / Unsupported browsers
+      alert("To install this app:\\n\\n1. Tap the Share icon in your browser.\\n2. Scroll down and select 'Add to Home Screen'.");
+    }
+  };
 
   // Apply theme to document element
   useEffect(() => {
@@ -255,7 +271,7 @@ function App() {
         <section className={`map-section glass-panel ${mobileTab === 'list' ? 'mobile-hidden' : ''}`}>
           {loading && <div className="map-loading-overlay">Loading map data...</div>}
           {error && <div className="error">{error}</div>}
-          {!loading && !error && <MapWrapper data={filteredData} userLocation={userLocation} tileUrl={tileUrl} />}
+          {!loading && !error && <MapWrapper data={filteredData} userLocation={userLocation} tileUrl={tileUrl} mobileTab={mobileTab} />}
         </section>
 
         <section className={`table-section ${mobileTab === 'map' ? 'mobile-hidden' : ''}`}>
@@ -277,15 +293,11 @@ function App() {
       
       <footer style={{ marginTop: '16px', padding: '16px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px', fontSize: '0.9rem', color: 'var(--text-muted)', background: 'var(--bg-panel)', borderTop: '1px solid var(--border-glass)' }}>
         <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap', justifyContent: 'center', alignItems: 'center' }}>
-          {deferredPrompt && (
+          {!isStandalone && (
             <button 
               className="action-btn"
-              style={{ padding: '8px 24px', fontSize: '1rem' }}
-              onClick={async () => {
-                deferredPrompt.prompt();
-                const { outcome } = await deferredPrompt.userChoice;
-                if (outcome === 'accepted') setDeferredPrompt(null);
-              }}
+              style={{ padding: '8px 24px', fontSize: '1rem', background: 'var(--text-main)', color: 'var(--bg-body)' }}
+              onClick={handleInstallClick}
             >
               📲 Install App
             </button>
