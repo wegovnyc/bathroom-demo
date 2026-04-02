@@ -23,7 +23,7 @@ function App() {
   const [error, setError] = useState(null);
 
   // Filters, Location, and Theme State
-  const [theme, setTheme] = useState('default');
+  const [theme, setTheme] = useState('nyc');
   const [userLocation, setUserLocation] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearching, setIsSearching] = useState(false);
@@ -33,6 +33,21 @@ function App() {
     ada: false,
     babyStation: false,
   });
+
+  // Mobile Tab State
+  const [mobileTab, setMobileTab] = useState('map');
+  
+  // PWA Install State
+  const [deferredPrompt, setDeferredPrompt] = useState(null);
+
+  useEffect(() => {
+    const handleBeforeInstallPrompt = (e) => {
+      e.preventDefault();
+      setDeferredPrompt(e);
+    };
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    return () => window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+  }, []);
 
   // Apply theme to document element
   useEffect(() => {
@@ -184,16 +199,6 @@ function App() {
         </div>
         
         <div style={{ display: 'flex', gap: '12px', alignItems: 'center', flexWrap: 'wrap' }}>
-          <select 
-            className="filter-btn" 
-            value={theme}
-            onChange={(e) => setTheme(e.target.value)}
-            style={{ padding: '8px', cursor: 'pointer', outline: 'none' }}
-          >
-            <option value="default">Default Theme</option>
-            <option value="nyc">NYC Open Data</option>
-            <option value="wegov">WeGovNYC</option>
-          </select>
           <button className="action-btn" onClick={toggleLocation}>
             {userLocation ? '✖️ Clear Location' : '📍 Find Nearest'}
           </button>
@@ -242,13 +247,18 @@ function App() {
       </header>
 
       <main className="dashboard-grid">
-        <section className="map-section glass-panel">
+        <div className="mobile-tabs">
+          <button className={`mobile-tab-btn ${mobileTab === 'map' ? 'active' : ''}`} onClick={() => setMobileTab('map')}>🗺️ Map</button>
+          <button className={`mobile-tab-btn ${mobileTab === 'list' ? 'active' : ''}`} onClick={() => setMobileTab('list')}>📋 List</button>
+        </div>
+
+        <section className={`map-section glass-panel ${mobileTab === 'list' ? 'mobile-hidden' : ''}`}>
           {loading && <div className="map-loading-overlay">Loading map data...</div>}
           {error && <div className="error">{error}</div>}
           {!loading && !error && <MapWrapper data={filteredData} userLocation={userLocation} tileUrl={tileUrl} />}
         </section>
 
-        <section className="table-section">
+        <section className={`table-section ${mobileTab === 'map' ? 'mobile-hidden' : ''}`}>
           <div className="table-container glass-panel">
              <div style={{ padding: '12px 16px', background: 'var(--bg-card)', borderBottom: '1px solid var(--border-glass)', fontSize: '0.85rem', color: 'var(--text-muted)' }}>
                Showing <strong>{filteredData.length}</strong> matching restroom{filteredData.length !== 1 ? 's' : ''}
@@ -265,8 +275,33 @@ function App() {
         </section>
       </main>
       
-      <footer style={{ marginTop: '16px', padding: '16px', textAlign: 'center', fontSize: '0.9rem', color: 'var(--text-muted)', background: 'var(--bg-panel)', borderTop: '1px solid var(--border-glass)' }}>
-        <p style={{ margin: 0 }}>
+      <footer style={{ marginTop: '16px', padding: '16px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px', fontSize: '0.9rem', color: 'var(--text-muted)', background: 'var(--bg-panel)', borderTop: '1px solid var(--border-glass)' }}>
+        <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap', justifyContent: 'center', alignItems: 'center' }}>
+          {deferredPrompt && (
+            <button 
+              className="action-btn"
+              style={{ padding: '8px 24px', fontSize: '1rem' }}
+              onClick={async () => {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                if (outcome === 'accepted') setDeferredPrompt(null);
+              }}
+            >
+              📲 Install App
+            </button>
+          )}
+          <select 
+            className="filter-btn" 
+            value={theme}
+            onChange={(e) => setTheme(e.target.value)}
+            style={{ padding: '6px 12px', cursor: 'pointer', outline: 'none' }}
+          >
+            <option value="nyc">NYC Open Data</option>
+            <option value="default">Basic Theme</option>
+            <option value="wegov">WeGovNYC</option>
+          </select>
+        </div>
+        <p style={{ margin: 0, textAlign: 'center' }}>
           Open source project by <a href="https://wegov.nyc" target="_blank" rel="noreferrer" style={{ color: 'var(--accent-main)', textDecoration: 'none', fontWeight: 500 }}>WeGovNYC</a>. 
           View the <a href="https://github.com/wegovnyc/bathroom-demo" target="_blank" rel="noreferrer" style={{ color: 'var(--accent-main)', textDecoration: 'none', fontWeight: 500 }}>GitHub Repository</a>.
         </p>

@@ -252,11 +252,47 @@ tbody tr:hover {
     flex-direction: column;
     min-height: auto;
   }
-  .map-section {
-    min-height: 40vh;
-    flex: none; /* Do not grow */
+  .map-section, .table-section {
+    min-height: 60vh;
+    flex: none;
   }
-  .table-section {
-    min-height: 50vh;
+  
+  .mobile-tabs {
+    display: flex;
+    gap: 8px;
+    background: var(--bg-panel);
+    padding: 8px;
+    border-radius: 12px;
+    border: 1px solid var(--border-glass);
+    margin-bottom: 8px;
+  }
+  
+  .mobile-tab-btn {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  
+  .mobile-tab-btn.active {
+    background: var(--btn-bg);
+    color: var(--accent-main);
+  }
+  
+  .mobile-hidden {
+    display: none !important;
+  }
+}
+
+/* Hide mobile tabs on desktop */
+@media (min-width: 851px) {
+  .mobile-tabs {
+    display: none;
   }
 }
