@@ -13,7 +13,7 @@
   <g filter="url(#shadow)">
     <!-- Base Pin Funnel (Back layer) -->
     <!-- Curves gracefully into the point -->
-    <path d="M 180 240 Q 256 360 256 450 Q 256 360 332 240 Z" fill="#07aeda" />
+    <path d="M 180 240 Q 210 380 256 460 Q 302 380 332 240 Z" fill="#07aeda" />
     
     <!-- Toilet Tank -->
     <rect x="176" y="80" width="160" height="120" rx="12" fill="#07aeda" />
