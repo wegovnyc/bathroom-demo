@@ -1,14 +1,31 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <!-- Map Pin Background -->
-  <path d="M256 0c-88.366 0-160 71.634-160 160 0 102.502 143.14 286.079 152.029 297.359 2.062 2.618 5.12 4.141 8.243 4.141 3.123 0 6.181-1.523 8.243-4.141C273.406 446.079 416 262.502 416 160c0-88.366-71.634-160-160-160z" fill="#07aeda"/>
-  <circle cx="256" cy="160" r="110" fill="#222222"/>
-  
-  <!-- Restroom Icon (Male/Female symbols) -->
-  <g fill="#ffffff" transform="translate(195, 100) scale(0.6)">
-    <!-- Male -->
-    <path d="M50 0C66.569 0 80 13.431 80 30C80 46.569 66.569 60 50 60C33.431 60 20 46.569 20 30C20 13.431 33.431 0 50 0ZM73.571 85.714C80.082 85.714 85.714 91.347 85.714 97.857V194.286H64V300H36V194.286H14.286V97.857C14.286 91.347 19.918 85.714 26.429 85.714H73.571Z" />
+  <defs>
+    <!-- Elegant drop shadow to make the pin pop out -->
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="16" stdDeviation="20" flood-color="#000000" flood-opacity="0.15" />
+    </filter>
+  </defs>
+
+  <!-- PWA Solid Background (Standard Rounded Square format) -->
+  <rect width="512" height="512" rx="112" fill="#E8F4F8" />
+
+  <!-- The "Toilet Pin" Graphic -->
+  <g filter="url(#shadow)">
+    <!-- Base Pin Funnel (Back layer) -->
+    <!-- Curves gracefully into the point -->
+    <path d="M 180 240 Q 256 360 256 450 Q 256 360 332 240 Z" fill="#07aeda" />
     
-    <!-- Female -->
-    <path d="M150 0C166.569 0 180 13.431 180 30C180 46.569 166.569 60 150 60C133.431 60 120 46.569 120 30C120 13.431 133.431 0 150 0ZM177.143 85.714C183.654 85.714 189.286 91.347 189.286 97.857V210H160V300H140V210H110.714V97.857C110.714 91.347 116.346 85.714 122.857 85.714H177.143Z" />
+    <!-- Toilet Tank -->
+    <rect x="176" y="80" width="160" height="120" rx="12" fill="#07aeda" />
+    <!-- Tank Lid -->
+    <rect x="156" y="70" width="200" height="24" rx="8" fill="#07aeda" />
+    <!-- Flush lever -->
+    <circle cx="204" cy="116" r="8" fill="#ffffff" />
+    <rect x="204" y="112" width="28" height="8" rx="4" fill="#ffffff" />
+
+    <!-- Toilet Bowl (Front layer) -->
+    <ellipse cx="256" cy="220" rx="104" ry="76" fill="#07aeda" />
+    <!-- Inner Bowl / Pin Hole -->
+    <ellipse cx="256" cy="226" rx="68" ry="42" fill="#E8F4F8" />
   </g>
 </svg>
