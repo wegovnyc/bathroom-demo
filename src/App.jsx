@@ -61,7 +61,7 @@ function App() {
       if (outcome === 'accepted') setDeferredPrompt(null);
     } else {
       // Fallback for iOS / Unsupported browsers
-      alert("To install this app:\\n\\n1. Tap the Share icon in your browser.\\n2. Scroll down and select 'Add to Home Screen'.");
+      alert("To install this app:\n\n1. Tap the Share icon in your browser.\n2. Scroll down and select 'Add to Home Screen'.");
     }
   };
 
